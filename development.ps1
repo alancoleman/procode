@@ -1,4 +1,4 @@
-Write-Host "Congratulations! Your first script executed successfully"
+#Write-Host "Congratulations! Your first script executed successfully"
 
 #1. Present a basic numbered menu asking a user to make a selection from GET Single Post, GET Single Comment, GET 10 Posts, GET 10 Comments
 #2. Upon selection the script will trigger the corresponding GET request to the fake Api - JSONPlaceholder - Free Fake REST API (typicode.com)
