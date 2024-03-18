@@ -1,3 +1,92 @@
+# Set menu variables
+$UserOption1 = "1) GET Single Post"
+$UserOption2 = "2) GET Single Comment"
+$UserOption3 = "3) GET 10 Posts"
+$UserOption4 = "4) GET 10 Comments"
+
+# Set misc variables
+$ApiDomainEndpoint = "https://jsonplaceholder.typicode.com/"
+$PsLineBreak = "`n"
+
+# Create a header
+$HeaderContentStarLine = "********************************"
+$HeaderContent = $PsLineBreak 
+$HeaderContent +=  $HeaderContentStarLine + "  Procode PS API Test " + $HeaderContentStarLine
+
+# start the script by writing out the header and menu items
+write-host $HeaderContent
+write-host $PsLineBreak
+write-host $UserOption1
+write-host $UserOption2
+write-host $UserOption3
+write-host $UserOption4
+write-host $PsLineBreak
+
+# Prompt user input and save as variable
+
+$UserChoice = Read-Host "Please make a choice from the menu above by entering its number"
+write-host $PsLineBreak
+Write-Host "Thank you, you have made choice '$UserChoice'"
+write-host $PsLineBreak
+
+
+if ($UserChoice -eq 1) {
+    # GET Single Post
+    $ApiFullEndpoint = $ApiDomainEndpoint + "posts/1"
+} 
+elseif ($UserChoice -eq 2) {
+    # GET Single Comment
+    $ApiFullEndpoint = $ApiDomainEndpoint + "comments/1"
+}
+elseif ($UserChoice -eq 3){
+    # GET 10 Posts
+    $ApiFullEndpoint = $ApiDomainEndpoint + "posts"
+}
+else {
+    # GET 10 Comments
+    <# Action when all if and elseif conditions are false #>
+    $ApiFullEndpoint = $ApiDomainEndpoint + "comments"
+    
+}
+
+write-host $ApiFullEndpoint
+write-host $PsLineBreak
+
+$ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint -UseBasicParsing
+#$ApiResponseJson = $ApiResponse.Content | ConvertFrom-Json
+
+write-host $ApiResponse
+
+# Loop through the users and do something
+#foreach ($user in $users)
+
+#{
+
+    # TODO
+    # Trim strings
+    # Shorten and ... title and content so they can be shown on a single line
+   # write-host "UserID: $($user.userId) ID: $($user.id)  has the title: $($user.title)"
+
+#}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+break
 #Write-Host "Congratulations! Your first script executed successfully"
 
 #1. Present a basic numbered menu asking a user to make a selection from GET Single Post, GET Single Comment, GET 10 Posts, GET 10 Comments
