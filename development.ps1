@@ -28,19 +28,20 @@
 
 # Invoke-WebRequest
 # https://devblogs.microsoft.com/scripting/working-with-json-data-in-powershell/
-$response = Invoke-WebRequest -Uri "https://jsonplaceholder.typicode.com/posts" -UseBasicParsing
+#$response = Invoke-WebRequest -Uri "https://jsonplaceholder.typicode.com/posts" -UseBasicParsing
 
 #$response[0].Content
 
-$users = $response[0].Content | ConvertFrom-Json
+#$users = $response[0].Content | ConvertFrom-Json
 
-foreach ($user in $users)
+# Loop through the users and do something
+#foreach ($user in $users)
 
-{
+#{
 
     # TODO
     # Trim strings
     # Shorten and ... title and content so they can be shown on a single line
-    write-host "UserID: $($user.userId) ID: $($user.id)  has the title: $($user.title)"
+   # write-host "UserID: $($user.userId) ID: $($user.id)  has the title: $($user.title)"
 
-}
+#}
