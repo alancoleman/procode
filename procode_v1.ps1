@@ -49,13 +49,48 @@ else {
     
 }
 
-write-host $ApiFullEndpoint
+write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
 
-$ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint -UseBasicParsing
-#$ApiResponseJson = $ApiResponse.Content | ConvertFrom-Json
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
+# PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns the Item or Entry XML nodes. 
+# For JavaScript Object Notation (JSON) or XML, PowerShell converts, or deserializes, the content into [PSCustomObject] objects.
+# [PSCustomObject]
+# TODO Try and catch for the Invoke-RestMethod
+$ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
 
 write-host $ApiResponse
+
+if ($UserChoice -eq 1) {
+    # Show Single Post
+    write-host $PsLineBreak
+    write-host "userId: " $ApiResponse.userId " id: " $ApiResponse.id 
+    write-host "Title: " $ApiResponse.title
+    write-host "Body: " $ApiResponse.body
+} 
+elseif ($UserChoice -eq 2) {
+    # Show Single Comment
+    write-host $PsLineBreak
+    write-host "postId: " $ApiResponse.postId " id: " $ApiResponse.id
+    write-host "Name: " $ApiResponse.name
+    write-host "Email: " $ApiResponse.email
+    write-host "Body: " $ApiResponse.body
+}
+elseif ($UserChoice -eq 3){
+    # Show 10 Posts
+    
+}
+elseif ($UserChoice -eq 4){
+    # Show 10 comments
+    
+}
+else {
+    # Error
+    <# Action when all if and elseif conditions are false #>
+    
+}
+
 
 # Loop through the users and do something
 #foreach ($user in $users)
