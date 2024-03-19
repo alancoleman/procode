@@ -29,7 +29,7 @@ write-host $PsLineBreak
 Write-Host "Thank you, you have made choice '$UserChoice'"
 write-host $PsLineBreak
 
-
+# Build the API Endpoint
 if ($UserChoice -eq 1) {
     # GET Single Post
     $ApiFullEndpoint = $ApiDomainEndpoint + "posts/1"
@@ -52,7 +52,7 @@ else {
 write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
 
-
+# Make the API Call
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
 # PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns the Item or Entry XML nodes. 
 # For JavaScript Object Notation (JSON) or XML, PowerShell converts, or deserializes, the content into [PSCustomObject] objects.
@@ -60,6 +60,7 @@ write-host $PsLineBreak
 # TODO Try and catch for the Invoke-RestMethod
 $ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
 
+# Display the response
 write-host $ApiResponse
 
 if ($UserChoice -eq 1) {
@@ -79,11 +80,23 @@ elseif ($UserChoice -eq 2) {
 }
 elseif ($UserChoice -eq 3){
     # Show 10 Posts
+    for ($i = 0;  $i -lt 10; $i++){
+        write-host $PsLineBreak
+        write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
+        write-host "Title: " $ApiResponse[$i].title
+        write-host "Body: " $ApiResponse[$i].body
+    }
     
 }
 elseif ($UserChoice -eq 4){
     # Show 10 comments
-    
+    for ($i = 0;  $i -lt 10; $i++){
+        write-host $PsLineBreak
+        write-host "postId: " $ApiResponse[$i].postId " id: " $ApiResponse[$i].id
+        write-host "Name: " $ApiResponse[$i].name
+        write-host "Email: " $ApiResponse[$i].email
+        write-host "Body: " $ApiResponse[$i].body
+    }
 }
 else {
     # Error
