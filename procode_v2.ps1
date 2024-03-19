@@ -1,11 +1,32 @@
-# Set menu variables
-$UserOption1 = "1) GET Single Post"
-$UserOption2 = "2) GET Single Comment"
-$UserOption3 = "3) GET 10 Posts"
-$UserOption4 = "4) GET 10 Comments"
+$AppData = @(
+    [pscustomobject]@{
+        MenuItem = "1) GET Single Post";
+        PostsToDisplay = 1;
+        ApiEndpointPath = "posts/1"
+    }
+    [pscustomobject]@{
+        MenuItem = "2) GET Single Comment";
+        PostsToDisplay = 1;
+        ApiEndpointPath = "comments/1"
+    }
+    [pscustomobject]@{
+        MenuItem = "3) GET 10 Posts";
+        PostsToDisplay = 10;
+        ApiEndpointPath = "posts"
+    }
+    [pscustomobject]@{
+        MenuItem = "4) GET 10 Comments";
+        PostsToDisplay = 10;
+        ApiEndpointPath = "comments"
+    }
+)
 
 # Set misc variables
+$AppDataCount = $AppData.Count # This is not zero based
 $ApiDomainEndpoint = "https://jsonplaceholder.typicode.com/"
+
+    
+
 $PsLineBreak = "`n"
 
 # Create a header
@@ -16,41 +37,29 @@ $HeaderContent +=  $HeaderContentStarLine + "  Procode PS API Test " + $HeaderCo
 # start the script by writing out the header and menu items
 write-host $HeaderContent
 write-host $PsLineBreak
-write-host $UserOption1
-write-host $UserOption2
-write-host $UserOption3
-write-host $UserOption4
-write-host $PsLineBreak
+
+#Loop trough menu items 
+foreach ( $node in $AppData )
+{
+    $node.MenuItem
+}
+
+
 
 # Prompt user input and save as variable
 
 $UserChoice = Read-Host "Please make a choice from the menu above by entering its number"
+$UserChoiceZeroBased = $UserChoice -1 
 write-host $PsLineBreak
-Write-Host "Thank you, you have made choice '$UserChoice'"
+Write-Host "Thank you, you have made choice '$UserChoice' ($UserChoiceZeroBased)"
 write-host $PsLineBreak
 
-# Build the API Endpoint
-if ($UserChoice -eq 1) {
-    # GET Single Post
-    $ApiFullEndpoint = $ApiDomainEndpoint + "posts/1"
-} 
-elseif ($UserChoice -eq 2) {
-    # GET Single Comment
-    $ApiFullEndpoint = $ApiDomainEndpoint + "comments/1"
-}
-elseif ($UserChoice -eq 3){
-    # GET 10 Posts
-    $ApiFullEndpoint = $ApiDomainEndpoint + "posts"
-}
-else {
-    # GET 10 Comments
-    <# Action when all if and elseif conditions are false #>
-    $ApiFullEndpoint = $ApiDomainEndpoint + "comments"
-    
-}
+$ApiFullEndpoint = $ApiDomainEndpoint + $AppData[$UserChoiceZeroBased].ApiEndpointPath
 
 write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
+
+break
 
 # Make the API Call
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
