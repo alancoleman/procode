@@ -101,6 +101,5 @@ elseif ($UserChoice -eq 4){
 }
 else {
     # Error
-    <# Action when all if and elseif conditions are false #>
-    
-}=
+    <# Action when all if and elseif conditions are false #> 
+}
