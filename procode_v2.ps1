@@ -35,12 +35,12 @@ $AppData = @(
     [pscustomobject]@{
         MenuItem = "1) GET Single Post";
         PostsToDisplay = 1;
-        ApiEndpointPath = "posts/1"
+        ApiEndpointPath = "posts/1" # userId, id, title, body
     }
     [pscustomobject]@{
         MenuItem = "2) GET Single Comment";
         PostsToDisplay = 1;
-        ApiEndpointPath = "comments/1"
+        ApiEndpointPath = "comments/1" # postId, id, name, email, body
     }
     [pscustomobject]@{
         MenuItem = "3) GET 10 Posts";
@@ -63,7 +63,7 @@ $Date = Get-Date
 # Create a header
 $HeaderContentStarLine = "********************************"
 $HeaderContent = $PsLineBreak 
-$HeaderContent +=  $HeaderContentStarLine + "  Procode PS API Test " + $HeaderContentStarLine
+$HeaderContent +=  $HeaderContentStarLine + "  Procode Cloud Powershell Test " + $HeaderContentStarLine
 
 # start the script by writing out the header and menu items
 write-host $HeaderContent
@@ -81,7 +81,6 @@ $ErrorActionPreference = 'Stop'
 $UserChoiceObj = "Make a choice from the menu by entering its number"
 
 # User input validation
-# https://stackoverflow.com/questions/68056955/user-input-validation-in-powershell
 $scriptBlock = {
     try
     {
@@ -126,11 +125,8 @@ write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
 
 # Make the API Call
-# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
 # PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns the Item or Entry XML nodes. 
 # For JavaScript Object Notation (JSON) or XML, PowerShell converts, or deserializes, the content into [PSCustomObject] objects.
-# [PSCustomObject]
-# https://stackoverflow.com/questions/29613572/error-handling-for-invoke-restmethod-powershell
 Try {
     $ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
 } Catch {
@@ -148,7 +144,6 @@ write-host $PsLineBreak
 
 if ($UserChoice -eq 1 -or $UserChoice -eq 3){
     # Show post(s)
-    # https://www.pdq.com/blog/guide-to-loops-in-powershell/
     for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
         write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
         write-host "Title: " $ApiResponse[$i].title

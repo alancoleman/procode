@@ -1,3 +1,23 @@
+## ---------------------------
+##
+## Script name: procode_v1
+##
+## Purpose of script: To display results of Procode interview task
+##
+## Author: Alan Coleman
+##
+## Date Created: 2018-03-19
+##
+## Email: alan@alancoleman.co.uk
+##
+## ---------------------------
+##
+## Notes:
+##
+## This is the first version of the script that has been superceded by procode_v2.ps1
+## 
+## ---------------------------
+
 # Set menu variables
 $UserOption1 = "1) GET Single Post"
 $UserOption2 = "2) GET Single Comment"
@@ -11,7 +31,7 @@ $PsLineBreak = "`n"
 # Create a header
 $HeaderContentStarLine = "********************************"
 $HeaderContent = $PsLineBreak 
-$HeaderContent +=  $HeaderContentStarLine + "  Procode PS API Test " + $HeaderContentStarLine
+$HeaderContent +=  $HeaderContentStarLine + "  Procode Cloud Powershell Test " + $HeaderContentStarLine
 
 # start the script by writing out the header and menu items
 write-host $HeaderContent
@@ -53,11 +73,9 @@ write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
 
 # Make the API Call
-# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
 # PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns the Item or Entry XML nodes. 
 # For JavaScript Object Notation (JSON) or XML, PowerShell converts, or deserializes, the content into [PSCustomObject] objects.
 # [PSCustomObject]
-# TODO Try and catch for the Invoke-RestMethod
 $ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
 
 # Display the response
@@ -80,7 +98,6 @@ elseif ($UserChoice -eq 2) {
 }
 elseif ($UserChoice -eq 3){
     # Show 10 Posts
-    # https://www.pdq.com/blog/guide-to-loops-in-powershell/
     for ($i = 0;  $i -lt 10; $i++){
         write-host $PsLineBreak
         write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
