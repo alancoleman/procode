@@ -1,3 +1,4 @@
+# Build an array of custom objects to hold the details for each available choice
 $AppData = @(
     [pscustomobject]@{
         MenuItem = "1) GET Single Post";
@@ -22,9 +23,10 @@ $AppData = @(
 )
 
 # Set misc variables
-$AppDataCount = $AppData.Count # This is not zero based
+$AppDataCount = $AppData.Count # This is not zero based, will be used as part of the input validation
 $ApiDomainEndpoint = "https://jsonplaceholder.typicode.com/"
 $PsLineBreak = "`n"
+$Date = Get-Date
 
 # Create a header
 $HeaderContentStarLine = "********************************"
@@ -35,28 +37,64 @@ $HeaderContent +=  $HeaderContentStarLine + "  Procode PS API Test " + $HeaderCo
 write-host $HeaderContent
 write-host $PsLineBreak
 
-#Loop trough menu items 
+#Loop trough menu items and display
 foreach ( $node in $AppData )
 {
     $node.MenuItem
 }
 
-
-
 # Prompt user input and save as variable
 write-host $PsLineBreak
-$UserChoice = Read-Host "Please make a choice from the menu above by entering its number"
+$ErrorActionPreference = 'Stop'
+$UserChoiceObj = "Make a choice from the menu by entering its number"
+
+# User input validation
+# https://stackoverflow.com/questions/68056955/user-input-validation-in-powershell
+$scriptBlock = {
+    try
+    {
+        $FromInput = [int](Read-Host $UserChoiceObj)
+
+        # Note I'm using Write-Host instead of Write-Ouput, this is because
+        # we don't want to store the invalid inputs messages in the
+        # $userInput variable.
+        if ($FromInput -le 0) {
+            Write-Warning "Your input has to be a number greater than 0!"
+            & $scriptBlock
+        }
+        # Use $AppDataCount here to check that the number selected isn't greater than the amount of menu items
+        # Will need to increment by 1 as the variable is zero based
+        elseif ($FromInput -ge $AppDataCount + 1) {
+            Write-Warning "Your input has to be the number $AppDataCount or less!"
+            & $scriptBlock
+        }
+        else {
+            $FromInput
+        }
+    }
+    catch
+    {
+        Write-Warning "Your input has to be a number."
+        & $scriptBlock
+    }
+}
+
+$UserChoice = & $scriptBlock
+
+# Create a zero based version of the $UserChoice variable, to be used to access the data
 $UserChoiceZeroBased = $UserChoice -1 
+
+# Display the users choice
 write-host $PsLineBreak
-Write-Host "Thank you, you have made choice '$UserChoice' ($UserChoiceZeroBased)"
+Write-Host "Thank you, you have made choice '$UserChoice' ($UserChoiceZeroBased) on $date"
 write-host $PsLineBreak
 
+# Create the API Endpoint
 $ApiFullEndpoint = $ApiDomainEndpoint + $AppData[$UserChoiceZeroBased].ApiEndpointPath
 
+# Display the API Endpoint
 write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
-
-
 
 # Make the API Call
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
@@ -64,35 +102,45 @@ write-host $PsLineBreak
 # For JavaScript Object Notation (JSON) or XML, PowerShell converts, or deserializes, the content into [PSCustomObject] objects.
 # [PSCustomObject]
 # TODO Try and catch for the Invoke-RestMethod
-$ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
+Try {
+    $ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
+} Catch {
+   if($_.ErrorDetails.Message) {
+        Write-Warning $_.ErrorDetails.Message
+   } else {
+        Write-Warning $_
+   }
+   break
+}
 
 # Display the response
-write-host $ApiResponse
-
+#write-host $ApiResponse
+#write-host $PsLineBreak
 
 if ($UserChoice -eq 1 -or $UserChoice -eq 3){
     # Show 10 Posts
     # https://www.pdq.com/blog/guide-to-loops-in-powershell/
     for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
-        write-host $PsLineBreak
         write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
         write-host "Title: " $ApiResponse[$i].title
         write-host "Body: " $ApiResponse[$i].body
+        write-host $HeaderContentStarLine
+        write-host $PsLineBreak
     }
     
 }
 elseif ($UserChoice -eq 2 -or $UserChoice -eq 4){
     # Show 10 comments
     for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
-        write-host $PsLineBreak
         write-host "postId: " $ApiResponse[$i].postId " id: " $ApiResponse[$i].id
         write-host "Name: " $ApiResponse[$i].name
         write-host "Email: " $ApiResponse[$i].email
         write-host "Body: " $ApiResponse[$i].body
+        write-host $HeaderContentStarLine
+        write-host $PsLineBreak
     }
 }
 else {
     # Error, this shouldn't be possible
-    <# Action when all if and elseif conditions are false #>
-    
+    Write-Error "User choice is not compatible"
 }
