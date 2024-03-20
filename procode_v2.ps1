@@ -167,3 +167,5 @@ else {
     # Error, this shouldn't be possible
     Write-Error "User choice is not compatible"
 }
+
+Pause
