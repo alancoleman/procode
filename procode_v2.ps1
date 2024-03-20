@@ -1,3 +1,35 @@
+## ---------------------------
+##
+## Script name: procode_v2
+##
+## Purpose of script: To display results of Procode interview task
+##
+## Author: Alan Coleman
+##
+## Date Created: 2018-03-20
+##
+## Email: alan@alancoleman.co.uk
+##
+## ---------------------------
+##
+## Notes:
+##
+## This is the second version of the task that uses more Powershell functionality to provide for better experience for both user and developer
+## 1) The details for each available choice are now stored in an array of PS Custom objects ($AppData), this allows the API End points to be stored alongside the corresponding menu items and required posts to be displayed
+## 2) The menu display makes use of the array and will not need to be adjusted once the $AppData array is altered
+## 3) User input is now validated with warnings returned for an invalid input. Again, the array details are used so the validation will not need to be adjusted once the $AppData array is altered
+## 4) A try and catch has been added to the Invoke-RestMethod, with warnings being returned from any error
+## 5) Display of the API response has been updated to reuse code. Again details from the $AppData array are used here
+##
+## Further improvement:
+## 
+## Currently, the repsonse from the API Requests are displayed with the key for each value hardcoded in the script, this is less than ideal.
+## An improvement would be to split the string on ; and loop through the new array splitting the substrings on = and replacing with :
+## The above improvement would mean that additional API Call options could be added to the $AppData array without any other part of the script being altered
+## Also, hard coding API Responses doesn't allow for that response to change by the endpoint provider
+## 
+## ---------------------------
+
 # Build an array of custom objects to hold the details for each available choice
 $AppData = @(
     [pscustomobject]@{
@@ -55,9 +87,6 @@ $scriptBlock = {
     {
         $FromInput = [int](Read-Host $UserChoiceObj)
 
-        # Note I'm using Write-Host instead of Write-Ouput, this is because
-        # we don't want to store the invalid inputs messages in the
-        # $userInput variable.
         if ($FromInput -le 0) {
             Write-Warning "Your input has to be a number greater than 0!"
             & $scriptBlock
@@ -114,11 +143,11 @@ Try {
 }
 
 # Display the response
-#write-host $ApiResponse
-#write-host $PsLineBreak
+write-host $ApiResponse
+write-host $PsLineBreak
 
 if ($UserChoice -eq 1 -or $UserChoice -eq 3){
-    # Show 10 Posts
+    # Show post(s)
     # https://www.pdq.com/blog/guide-to-loops-in-powershell/
     for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
         write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
@@ -127,10 +156,9 @@ if ($UserChoice -eq 1 -or $UserChoice -eq 3){
         write-host $HeaderContentStarLine -ForegroundColor Blue
         write-host $PsLineBreak
     }
-    
 }
 elseif ($UserChoice -eq 2 -or $UserChoice -eq 4){
-    # Show 10 comments
+    # Show comment(s)
     for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
         write-host "postId: " $ApiResponse[$i].postId " id: " $ApiResponse[$i].id
         write-host "Name: " $ApiResponse[$i].name
