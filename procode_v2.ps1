@@ -24,9 +24,6 @@ $AppData = @(
 # Set misc variables
 $AppDataCount = $AppData.Count # This is not zero based
 $ApiDomainEndpoint = "https://jsonplaceholder.typicode.com/"
-
-    
-
 $PsLineBreak = "`n"
 
 # Create a header
@@ -47,7 +44,7 @@ foreach ( $node in $AppData )
 
 
 # Prompt user input and save as variable
-
+write-host $PsLineBreak
 $UserChoice = Read-Host "Please make a choice from the menu above by entering its number"
 $UserChoiceZeroBased = $UserChoice -1 
 write-host $PsLineBreak
@@ -59,7 +56,7 @@ $ApiFullEndpoint = $ApiDomainEndpoint + $AppData[$UserChoiceZeroBased].ApiEndpoi
 write-host "API Endpoint: " $ApiFullEndpoint
 write-host $PsLineBreak
 
-break
+
 
 # Make the API Call
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
@@ -72,25 +69,11 @@ $ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
 # Display the response
 write-host $ApiResponse
 
-if ($UserChoice -eq 1) {
-    # Show Single Post
-    write-host $PsLineBreak
-    write-host "userId: " $ApiResponse.userId " id: " $ApiResponse.id 
-    write-host "Title: " $ApiResponse.title
-    write-host "Body: " $ApiResponse.body
-} 
-elseif ($UserChoice -eq 2) {
-    # Show Single Comment
-    write-host $PsLineBreak
-    write-host "postId: " $ApiResponse.postId " id: " $ApiResponse.id
-    write-host "Name: " $ApiResponse.name
-    write-host "Email: " $ApiResponse.email
-    write-host "Body: " $ApiResponse.body
-}
-elseif ($UserChoice -eq 3){
+
+if ($UserChoice -eq 1 -or $UserChoice -eq 3){
     # Show 10 Posts
     # https://www.pdq.com/blog/guide-to-loops-in-powershell/
-    for ($i = 0;  $i -lt 10; $i++){
+    for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
         write-host $PsLineBreak
         write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
         write-host "Title: " $ApiResponse[$i].title
@@ -98,9 +81,9 @@ elseif ($UserChoice -eq 3){
     }
     
 }
-elseif ($UserChoice -eq 4){
+elseif ($UserChoice -eq 2 -or $UserChoice -eq 4){
     # Show 10 comments
-    for ($i = 0;  $i -lt 10; $i++){
+    for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
         write-host $PsLineBreak
         write-host "postId: " $ApiResponse[$i].postId " id: " $ApiResponse[$i].id
         write-host "Name: " $ApiResponse[$i].name
@@ -109,7 +92,7 @@ elseif ($UserChoice -eq 4){
     }
 }
 else {
-    # Error
+    # Error, this shouldn't be possible
     <# Action when all if and elseif conditions are false #>
     
-}=
+}
