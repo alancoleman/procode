@@ -17,8 +17,14 @@ This file is the latest version and contains improvements on procode_v1.ps1
 > 3. The script should then output the results to the PowerShell window.
 > 4. As a bonus, deserialise the JSON object into a better format.
 
+## API Endpoint details
+- https://jsonplaceholder.typicode.com/
+- https://jsonplaceholder.typicode.com/posts
+- https://jsonplaceholder.typicode.com/comments
+- https://jsonplaceholder.typicode.com/posts/1
+- https://jsonplaceholder.typicode.com/comments/1
  
- ## Resources
+## Resources
 
 - https://jsonplaceholder.typicode.com/
 - https://adamtheautomator.com/invoke-restmethod/
