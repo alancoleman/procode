@@ -86,7 +86,7 @@ $UserChoiceZeroBased = $UserChoice -1
 
 # Display the users choice
 write-host $PsLineBreak
-Write-Host "Thank you, you have made choice '$UserChoice' ($UserChoiceZeroBased) on $date"
+Write-Host "Thank you, you have made choice '$UserChoice' ($UserChoiceZeroBased) on $date"  -ForegroundColor Green
 write-host $PsLineBreak
 
 # Create the API Endpoint
@@ -101,7 +101,7 @@ write-host $PsLineBreak
 # PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns the Item or Entry XML nodes. 
 # For JavaScript Object Notation (JSON) or XML, PowerShell converts, or deserializes, the content into [PSCustomObject] objects.
 # [PSCustomObject]
-# TODO Try and catch for the Invoke-RestMethod
+# https://stackoverflow.com/questions/29613572/error-handling-for-invoke-restmethod-powershell
 Try {
     $ApiResponse = Invoke-RestMethod -Uri $ApiFullEndpoint
 } Catch {
@@ -124,7 +124,7 @@ if ($UserChoice -eq 1 -or $UserChoice -eq 3){
         write-host "userId: " $ApiResponse[$i].userId " id: " $ApiResponse[$i].id 
         write-host "Title: " $ApiResponse[$i].title
         write-host "Body: " $ApiResponse[$i].body
-        write-host $HeaderContentStarLine
+        write-host $HeaderContentStarLine -ForegroundColor Blue
         write-host $PsLineBreak
     }
     
@@ -134,9 +134,9 @@ elseif ($UserChoice -eq 2 -or $UserChoice -eq 4){
     for ($i = 0;  $i -lt $AppData[$UserChoiceZeroBased].PostsToDisplay; $i++){
         write-host "postId: " $ApiResponse[$i].postId " id: " $ApiResponse[$i].id
         write-host "Name: " $ApiResponse[$i].name
-        write-host "Email: " $ApiResponse[$i].email
+        write-host "Email: " $ApiResponse[$i].email -ForegroundColor Yellow
         write-host "Body: " $ApiResponse[$i].body
-        write-host $HeaderContentStarLine
+        write-host $HeaderContentStarLine -ForegroundColor Blue
         write-host $PsLineBreak
     }
 }
